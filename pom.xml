@@ -10,10 +10,22 @@
 	<artifactId>aiyou-cart-web</artifactId>
 	<packaging>war</packaging>
 	<dependencies>
-		<!-- 网站内容管理后台服务接口 -->
+		<!-- 添加 aiyou-cart-interface 依赖包  -->
 		<dependency>
 			<groupId>com.huazai.b2c.aiyou</groupId>
 			<artifactId>aiyou-cart-interface</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<!-- 添加 aiyou-sso-interface 依赖包 -->
+		<dependency>
+			<groupId>com.huazai.b2c.aiyou</groupId>
+			<artifactId>aiyou-sso-interface</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<!-- 添加 aiyou-manager-interface 依赖包 -->
+		<dependency>
+			<groupId>com.huazai.b2c.aiyou</groupId>
+			<artifactId>aiyou-manager-interface</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- Spring 相关 -->
