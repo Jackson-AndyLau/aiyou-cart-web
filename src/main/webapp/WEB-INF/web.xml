@@ -42,5 +42,8 @@
 		<servlet-name>aiyou-cart-web</servlet-name>
 		<!-- 伪静态化：SEO 搜索引擎优化 -->
 		<url-pattern>*.html</url-pattern>
+		<servlet-name>aiyou-cart-web</servlet-name>
+		<!-- 支持JSON格式的数据 -->
+		<url-pattern>*.action</url-pattern>
 	</servlet-mapping>
 </web-app>
