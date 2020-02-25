@@ -89,7 +89,7 @@ public class TbItemCartController
 		{
 			// 如果用户已登录，则展示服务器上面的购物车列表
 			TbUser tbUser = (TbUser) resultData.getData();
-			List<TbItemCartVO> tbItemCartVOs = tbItemCartService.queryTbItemByUserId(tbUser.getId());
+			List<TbItemCartVO> tbItemCartVOs = tbItemCartService.queryTbItemCartByUserId(tbUser.getId());
 			request.setAttribute("cartList", tbItemCartVOs);
 		} else
 		{
@@ -112,7 +112,7 @@ public class TbItemCartController
 		{
 			// 如果登录，则修改服务器上的购物车商品数量
 			TbUser tbUser = (TbUser) resultData.getData();
-			tbItemCartService.updateTbItemByUserIdAndItemId(tbUser.getId(), itemId, num);
+			tbItemCartService.updateTbItemCartByUserIdAndItemId(tbUser.getId(), itemId, num);
 			return AiyouResultData.ok();
 		} else
 		{
@@ -120,6 +120,28 @@ public class TbItemCartController
 
 			return AiyouResultData.ok();
 		}
+	}
+
+	@Description(value = "删除购物车商品")
+	@RequestMapping(value = "/delete/{itemId}")
+	public String deleteTbItemCart(@PathVariable(value = "itemId") Long itemId, HttpServletRequest request,
+			HttpServletResponse response)
+	{
+		// 获取用户Token
+		String token = CookieUtils.getCookieValue(request, TB_LOGIN_USER_INFO_KEY);
+		// 根据获取用户登录信息
+		AiyouResultData resultData = tbUserService.getUserInfoByToken(token);
+		if (resultData.getStatus() == 200)
+		{
+			// 如果登录，则删除服务器上的购物车商品数量
+			TbUser tbUser = (TbUser) resultData.getData();
+			tbItemCartService.deleteTbItemCartByUserIdAndItemId(tbUser.getId(), itemId);
+		} else
+		{
+			// 如果未登录，则删除用户本地Cookie中购物车商品数量
+
+		}
+		return "redirect:/cart/cart.html";
 	}
 
 }
