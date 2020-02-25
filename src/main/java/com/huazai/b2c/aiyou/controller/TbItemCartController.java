@@ -1,5 +1,7 @@
 package com.huazai.b2c.aiyou.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -75,4 +77,25 @@ public class TbItemCartController
 		return "cartSuccess";
 	}
 
+	@Description(value = "显示购物车列表")
+	@RequestMapping(value = "/cart")
+	public String showTbItemCart(HttpServletRequest request)
+	{
+		// 获取用户Token
+		String token = CookieUtils.getCookieValue(request, TB_LOGIN_USER_INFO_KEY);
+		// 根据获取用户登录信息
+		AiyouResultData resultData = tbUserService.getUserInfoByToken(token);
+		if (resultData.getStatus() == 200)
+		{
+			// 如果用户已登录，则展示服务器上面的购物车列表
+			TbUser tbUser = (TbUser) resultData.getData();
+			List<TbItemCartVO> tbItemCartVOs = tbItemCartService.queryTbItemByUserIdAndItemId(tbUser.getId());
+			request.setAttribute("cartList", tbItemCartVOs);
+		} else
+		{
+			// 如果用户未登录，则展示用户本地Cookie的购物车列表
+			
+		}
+		return "cart";
+	}
 }
