@@ -1,5 +1,6 @@
 package com.huazai.b2c.aiyou.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,6 +23,7 @@ import com.huazai.b2c.aiyou.service.TbItemCartService;
 import com.huazai.b2c.aiyou.service.TbItemService;
 import com.huazai.b2c.aiyou.service.TbUserService;
 import com.huazai.b2c.aiyou.utils.CookieUtils;
+import com.huazai.b2c.aiyou.utils.JsonUtils;
 import com.huazai.b2c.aiyou.vo.TbItemCartVO;
 
 /**
@@ -51,6 +55,12 @@ public class TbItemCartController
 	@Value(value = "${TB_LOGIN_USER_INFO_KEY}")
 	private String TB_LOGIN_USER_INFO_KEY;
 
+	@Value(value = "${TB_ITEM_CART_LOCAL_KEY}")
+	private String TB_ITEM_CART_LOCAL_KEY;
+
+	@Value(value = "${TB_ITEM_CART_LOCAL_KEY_EXPIRE}")
+	private Integer TB_ITEM_CART_LOCAL_KEY_EXPIRE;
+
 	@Description(value = "商品添加购物车")
 	@RequestMapping(value = "/add/{itemId}")
 	public String addTbItemCart(@PathVariable(value = "itemId") Long itemId, Integer num, HttpServletRequest request,
@@ -72,9 +82,105 @@ public class TbItemCartController
 		} else
 		{
 			// 如果用户未登录，则将商品添加到本地Cookie
-
+			this.addTbItemCartToCookie(itemId, num, request, response);
 		}
 		return "cartSuccess";
+	}
+
+	/**
+	 * 
+	 * @author HuaZai
+	 * @contact who.seek.me@java98k.vip
+	 * @title addTbItemCartToCookie
+	 *        <ul>
+	 * @description 将商品添加到用户本地Cookie
+	 *              </ul>
+	 * @createdTime 2017年06月18日
+	 * @param itemId
+	 * @param num
+	 * @param request
+	 * @param response
+	 * @return void
+	 *
+	 * @version : V1.0.0
+	 */
+	private void addTbItemCartToCookie(Long itemId, Integer num, HttpServletRequest request,
+			HttpServletResponse response)
+	{
+		// 从Cookie中获取商品
+		List<TbItemCartVO> tbItemCartVOs = this.getTbItemCartByCookie(request);
+		if (!CollectionUtils.isEmpty(tbItemCartVOs))
+		{
+			// 如果商品存在于用户的Cookie中，则商品数量 + num
+			boolean flag = false;
+			for (TbItemCartVO tbItemCartVO : tbItemCartVOs)
+			{
+				if (tbItemCartVO.getId() == itemId.longValue())
+				{
+					tbItemCartVO.setNum(tbItemCartVO.getNum() + num);
+					flag = true;
+					break;
+				}
+			}
+			// 将跟新后的购物车列表跟新到用户的本地Cookie中
+			if (flag == true)
+			{
+				CookieUtils.setCookie(request, response, TB_ITEM_CART_LOCAL_KEY, JsonUtils.objectToJson(tbItemCartVOs),
+						TB_ITEM_CART_LOCAL_KEY_EXPIRE, true);
+			} else
+			{
+				// 如果商品不存在，根据商品ID查询商品信息
+				TbItem tbItem = tbItemService.getTbItemById(itemId);
+				TbItemCartVO tbItemCartVO = new TbItemCartVO();
+				// 如果商品ID在商品库中存在
+				if (!StringUtils.isEmpty(tbItem))
+				{
+					BeanUtils.copyProperties(tbItem, tbItemCartVO);
+					// 设置商品数量
+					tbItem.setNum(num);
+					// 截取商品图片
+					if (!StringUtils.isEmpty(tbItem.getImage()))
+					{
+						String img = tbItem.getImage().split(",")[0];
+						tbItem.setImage(img);
+					}
+					// 将新增的商品设值到商品列表中
+					tbItemCartVOs.add(tbItemCartVO);
+					// 重新构建后的商品列表设值到用户本地的Cookie中
+					CookieUtils.setCookie(request, response, TB_ITEM_CART_LOCAL_KEY,
+							JsonUtils.objectToJson(tbItemCartVOs), TB_ITEM_CART_LOCAL_KEY_EXPIRE, true);
+				}
+
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @author HuaZai
+	 * @contact who.seek.me@java98k.vip
+	 * @title getTbItemCartByCookie
+	 *        <ul>
+	 * @description 从用户本地的Cookie中获取商品列表信息
+	 *              </ul>
+	 * @createdTime 2017年06月18日
+	 * @param request
+	 * @return
+	 * @return List<TbItemCartVO>
+	 *
+	 * @version : V1.0.0
+	 */
+	private List<TbItemCartVO> getTbItemCartByCookie(HttpServletRequest request)
+	{
+		// 从Cookie中获取商品信息
+		String resultData = CookieUtils.getCookieValue(request, TB_ITEM_CART_LOCAL_KEY, true);
+		// 将商品转换成列表并返回
+		List<TbItemCartVO> tbItemCartVOs = new ArrayList<TbItemCartVO>();
+		if (!StringUtils.isEmpty(resultData))
+		{
+			tbItemCartVOs = JsonUtils.jsonToList(resultData, TbItemCartVO.class);
+		}
+		return tbItemCartVOs;
 	}
 
 	@Description(value = "显示购物车列表")
