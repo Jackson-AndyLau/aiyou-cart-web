@@ -89,13 +89,37 @@ public class TbItemCartController
 		{
 			// 如果用户已登录，则展示服务器上面的购物车列表
 			TbUser tbUser = (TbUser) resultData.getData();
-			List<TbItemCartVO> tbItemCartVOs = tbItemCartService.queryTbItemByUserIdAndItemId(tbUser.getId());
+			List<TbItemCartVO> tbItemCartVOs = tbItemCartService.queryTbItemByUserId(tbUser.getId());
 			request.setAttribute("cartList", tbItemCartVOs);
 		} else
 		{
 			// 如果用户未登录，则展示用户本地Cookie的购物车列表
-			
+
 		}
 		return "cart";
 	}
+
+	@Description(value = "修改购物车商品数量")
+	@RequestMapping(value = "/update/num/{itemId}/{num}")
+	public AiyouResultData updateTbItemCart(@PathVariable(value = "itemId") Long itemId,
+			@PathVariable(value = "num") Integer num, HttpServletRequest request)
+	{
+		// 获取用户Token
+		String token = CookieUtils.getCookieValue(request, TB_LOGIN_USER_INFO_KEY);
+		// 根据获取用户登录信息
+		AiyouResultData resultData = tbUserService.getUserInfoByToken(token);
+		if (resultData.getStatus() == 200)
+		{
+			// 如果登录，则修改服务器上的购物车商品数量
+			TbUser tbUser = (TbUser) resultData.getData();
+			tbItemCartService.updateTbItemByUserIdAndItemId(tbUser.getId(), itemId, num);
+			return AiyouResultData.ok();
+		} else
+		{
+			// 如果未登录，则修改用户本地Cookie中购物车商品数量
+
+			return AiyouResultData.ok();
+		}
+	}
+
 }
