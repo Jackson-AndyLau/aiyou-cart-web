@@ -82,7 +82,7 @@ public class TbItemCartController
 		} else
 		{
 			// 如果用户未登录，则将商品添加到本地Cookie
-			this.addTbItemCartToCookie(itemId, num, request, response);
+			this.updateTbItemCartToCookie(itemId, num, request, response);
 		}
 		return "cartSuccess";
 	}
@@ -93,7 +93,7 @@ public class TbItemCartController
 	 * @contact who.seek.me@java98k.vip
 	 * @title addTbItemCartToCookie
 	 *        <ul>
-	 * @description 将商品添加到用户本地Cookie
+	 * @description 修改用户本地Cookie中商品信息
 	 *              </ul>
 	 * @createdTime 2017年06月18日
 	 * @param itemId
@@ -104,7 +104,7 @@ public class TbItemCartController
 	 *
 	 * @version : V1.0.0
 	 */
-	private void addTbItemCartToCookie(Long itemId, Integer num, HttpServletRequest request,
+	private void updateTbItemCartToCookie(Long itemId, Integer num, HttpServletRequest request,
 			HttpServletResponse response)
 	{
 		// 从Cookie中获取商品
@@ -159,6 +159,48 @@ public class TbItemCartController
 	 * 
 	 * @author HuaZai
 	 * @contact who.seek.me@java98k.vip
+	 * @title deleteTbItemCartByCookie
+	 *        <ul>
+	 * @description 删除用户本地Cookie中购物车中的商品信息
+	 *              </ul>
+	 * @createdTime 2017年06月18日
+	 * @param itemId
+	 * @param request
+	 * @param response
+	 * @return void
+	 *
+	 * @version : V1.0.0
+	 */
+	private void deleteTbItemCartByCookie(Long itemId, HttpServletRequest request, HttpServletResponse response)
+	{
+		// 从Cookie中获取商品列表
+		List<TbItemCartVO> tbItemCartVOs = this.getTbItemCartByCookie(request);
+		boolean flag = false;
+		if (!CollectionUtils.isEmpty(tbItemCartVOs))
+		{
+			for (TbItemCartVO tbItemCartVO : tbItemCartVOs)
+			{
+				// 如果删除的商品存在，则直接删除，否则，不做任何操作
+				if (tbItemCartVO.getId() == itemId)
+				{
+					tbItemCartVOs.remove(tbItemCartVO);
+					flag = true;
+					break;
+				}
+			}
+			if (flag == true)
+			{
+				// 更新购物车
+				CookieUtils.setCookie(request, response, TB_ITEM_CART_LOCAL_KEY, JsonUtils.objectToJson(tbItemCartVOs),
+						TB_ITEM_CART_LOCAL_KEY_EXPIRE, true);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @author HuaZai
+	 * @contact who.seek.me@java98k.vip
 	 * @title getTbItemCartByCookie
 	 *        <ul>
 	 * @description 从用户本地的Cookie中获取商品列表信息
@@ -200,15 +242,16 @@ public class TbItemCartController
 		} else
 		{
 			// 如果用户未登录，则展示用户本地Cookie的购物车列表
-
+			List<TbItemCartVO> tbItemCartVOs = this.getTbItemCartByCookie(request);
+			request.setAttribute("cartList", tbItemCartVOs);
 		}
 		return "cart";
 	}
 
 	@Description(value = "修改购物车商品数量")
 	@RequestMapping(value = "/update/num/{itemId}/{num}")
-	public AiyouResultData updateTbItemCart(@PathVariable(value = "itemId") Long itemId,
-			@PathVariable(value = "num") Integer num, HttpServletRequest request)
+	public AiyouResultData updateTbItemCartByNum(@PathVariable(value = "itemId") Long itemId,
+			@PathVariable(value = "num") Integer num, HttpServletRequest request, HttpServletResponse response)
 	{
 		// 获取用户Token
 		String token = CookieUtils.getCookieValue(request, TB_LOGIN_USER_INFO_KEY);
@@ -223,7 +266,7 @@ public class TbItemCartController
 		} else
 		{
 			// 如果未登录，则修改用户本地Cookie中购物车商品数量
-
+			this.updateTbItemCartToCookie(itemId, num, request, response);
 			return AiyouResultData.ok();
 		}
 	}
@@ -245,7 +288,7 @@ public class TbItemCartController
 		} else
 		{
 			// 如果未登录，则删除用户本地Cookie中购物车商品数量
-
+			this.deleteTbItemCartByCookie(itemId, request, response);
 		}
 		return "redirect:/cart/cart.html";
 	}
