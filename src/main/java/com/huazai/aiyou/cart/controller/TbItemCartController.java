@@ -1,4 +1,4 @@
-package com.huazai.b2c.aiyou.controller;
+package com.huazai.aiyou.cart.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +16,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.huazai.b2c.aiyou.pojo.TbItem;
-import com.huazai.b2c.aiyou.pojo.TbUser;
-import com.huazai.b2c.aiyou.repo.AiyouResultData;
-import com.huazai.b2c.aiyou.service.TbItemCartService;
-import com.huazai.b2c.aiyou.service.TbItemService;
-import com.huazai.b2c.aiyou.service.TbUserService;
-import com.huazai.b2c.aiyou.utils.CookieUtils;
-import com.huazai.b2c.aiyou.utils.JsonUtils;
-import com.huazai.b2c.aiyou.vo.TbItemCartVO;
+import com.huazai.aiyou.cart.service.TbItemCartService;
+import com.huazai.aiyou.common.response.AiyouResultData;
+import com.huazai.aiyou.common.utils.CookieUtils;
+import com.huazai.aiyou.common.utils.JsonUtils;
+import com.huazai.aiyou.common.vo.TbItemCartVO;
+import com.huazai.aiyou.manager.pojo.TbItem;
+import com.huazai.aiyou.manager.service.TbItemService;
+import com.huazai.aiyou.sso.pojo.TbUser;
+import com.huazai.aiyou.sso.service.TbUserService;
+
 
 /**
  * 

@@ -1,4 +1,4 @@
-package com.huazai.b2c.aiyou.exception;
+package com.huazai.aiyou.cart.exception;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

@@ -24,7 +24,7 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 	<!-- 配置全局异常处理器 -->
-	<bean class="com.huazai.b2c.aiyou.exception.GlobalHandlerExceptionResolver"></bean>
+	<bean class="com.huazai.aiyou.cart.exception.GlobalHandlerExceptionResolver"></bean>
 	<!-- 添加js，css资源映射标签 -->
 	<!-- location="/WEB-INF/js/" 表示在该目录下的静态资源包括子目录下的静态资源都不会被拦截 -->
 	<!-- mapping="/js/**" 表示访问静态资源的路径的形式，可以访问/js/下的静态资源或者所有子目录下的静态资源 -->
@@ -39,7 +39,13 @@
 		address="${single.zookeeper.baseUrl}" />
 
 	<!-- 应用调用远程服务接口 -->
-<!-- 	<dubbo:reference
-		interface="com.huazai.b2c.aiyou.service.TbContentService"
-		id="tbContentService" timeout="300000" /> -->
+	<dubbo:reference
+		interface="com.huazai.aiyou.cart.service.TbItemCartService"
+		id="tbItemCartService" timeout="300000" />
+	<dubbo:reference
+		interface="com.huazai.aiyou.sso.service.TbUserService"
+		id="tbUserService" timeout="300000" />
+	<dubbo:reference
+		interface="com.huazai.aiyou.manager.service.TbItemService"
+		id="tbItemService" timeout="300000" />
 </beans>
