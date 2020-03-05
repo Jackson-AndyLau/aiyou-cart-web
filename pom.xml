@@ -3,28 +3,29 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.huazai.b2c.aiyou</groupId>
+		<groupId>com.huazai.aiyou.parent</groupId>
 		<artifactId>aiyou-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
+	<groupId>com.huazai.aiyou.cart</groupId>
 	<artifactId>aiyou-cart-web</artifactId>
 	<packaging>war</packaging>
 	<dependencies>
-		<!-- 添加 aiyou-cart-interface 依赖包  -->
+		<!-- 添加 aiyou-cart-interface 依赖包 -->
 		<dependency>
-			<groupId>com.huazai.b2c.aiyou</groupId>
+			<groupId>com.huazai.aiyou.cart</groupId>
 			<artifactId>aiyou-cart-interface</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- 添加 aiyou-sso-interface 依赖包 -->
 		<dependency>
-			<groupId>com.huazai.b2c.aiyou</groupId>
+			<groupId>com.huazai.aiyou.sso</groupId>
 			<artifactId>aiyou-sso-interface</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- 添加 aiyou-manager-interface 依赖包 -->
 		<dependency>
-			<groupId>com.huazai.b2c.aiyou</groupId>
+			<groupId>com.huazai.aiyou.manager</groupId>
 			<artifactId>aiyou-manager-interface</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
