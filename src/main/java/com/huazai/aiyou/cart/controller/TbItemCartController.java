@@ -53,14 +53,14 @@ public class TbItemCartController
 	@Autowired
 	private TbItemService tbItemService;
 
-	@Value(value = "${TB_LOGIN_USER_INFO_KEY}")
-	private String TB_LOGIN_USER_INFO_KEY;
+	@Value(value = "${AIYOU_TB_LOGIN_USER_INFO_KEY}")
+	private String AIYOU_TB_LOGIN_USER_INFO_KEY;
 
-	@Value(value = "${TB_ITEM_CART_LOCAL_KEY}")
-	private String TB_ITEM_CART_LOCAL_KEY;
+	@Value(value = "${AIYOU_TB_ITEM_CART_LOCAL_KEY}")
+	private String AIYOU_TB_ITEM_CART_LOCAL_KEY;
 
-	@Value(value = "${TB_ITEM_CART_LOCAL_KEY_EXPIRE}")
-	private Integer TB_ITEM_CART_LOCAL_KEY_EXPIRE;
+	@Value(value = "${AIYOU_TB_ITEM_CART_LOCAL_KEY_EXPIRE}")
+	private Integer AIYOU_TB_ITEM_CART_LOCAL_KEY_EXPIRE;
 
 	@Description(value = "商品添加购物车")
 	@RequestMapping(value = "/add/{itemId}")
@@ -68,7 +68,7 @@ public class TbItemCartController
 			HttpServletResponse response)
 	{
 		// 获取用户Token
-		String token = CookieUtils.getCookieValue(request, TB_LOGIN_USER_INFO_KEY);
+		String token = CookieUtils.getCookieValue(request, AIYOU_TB_LOGIN_USER_INFO_KEY);
 		// 根据获取用户登录信息
 		AiyouResultData resultData = tbUserService.getUserInfoByToken(token);
 		if (resultData.getStatus() == 200)
@@ -126,8 +126,8 @@ public class TbItemCartController
 			// 将跟新后的购物车列表跟新到用户的本地Cookie中
 			if (flag == true)
 			{
-				CookieUtils.setCookie(request, response, TB_ITEM_CART_LOCAL_KEY, JsonUtils.objectToJson(tbItemCartVOs),
-						TB_ITEM_CART_LOCAL_KEY_EXPIRE, true);
+				CookieUtils.setCookie(request, response, AIYOU_TB_ITEM_CART_LOCAL_KEY, JsonUtils.objectToJson(tbItemCartVOs),
+						AIYOU_TB_ITEM_CART_LOCAL_KEY_EXPIRE, true);
 			} else
 			{
 				// 如果商品不存在，根据商品ID查询商品信息
@@ -148,8 +148,8 @@ public class TbItemCartController
 					// 将新增的商品设值到商品列表中
 					tbItemCartVOs.add(tbItemCartVO);
 					// 重新构建后的商品列表设值到用户本地的Cookie中
-					CookieUtils.setCookie(request, response, TB_ITEM_CART_LOCAL_KEY,
-							JsonUtils.objectToJson(tbItemCartVOs), TB_ITEM_CART_LOCAL_KEY_EXPIRE, true);
+					CookieUtils.setCookie(request, response, AIYOU_TB_ITEM_CART_LOCAL_KEY,
+							JsonUtils.objectToJson(tbItemCartVOs), AIYOU_TB_ITEM_CART_LOCAL_KEY_EXPIRE, true);
 				}
 
 			}
@@ -192,8 +192,8 @@ public class TbItemCartController
 			if (flag == true)
 			{
 				// 更新购物车
-				CookieUtils.setCookie(request, response, TB_ITEM_CART_LOCAL_KEY, JsonUtils.objectToJson(tbItemCartVOs),
-						TB_ITEM_CART_LOCAL_KEY_EXPIRE, true);
+				CookieUtils.setCookie(request, response, AIYOU_TB_ITEM_CART_LOCAL_KEY, JsonUtils.objectToJson(tbItemCartVOs),
+						AIYOU_TB_ITEM_CART_LOCAL_KEY_EXPIRE, true);
 			}
 		}
 	}
@@ -216,7 +216,7 @@ public class TbItemCartController
 	private List<TbItemCartVO> getTbItemCartByCookie(HttpServletRequest request)
 	{
 		// 从Cookie中获取商品信息
-		String resultData = CookieUtils.getCookieValue(request, TB_ITEM_CART_LOCAL_KEY, true);
+		String resultData = CookieUtils.getCookieValue(request, AIYOU_TB_ITEM_CART_LOCAL_KEY, true);
 		// 将商品转换成列表并返回
 		List<TbItemCartVO> tbItemCartVOs = new ArrayList<TbItemCartVO>();
 		if (!StringUtils.isEmpty(resultData))
@@ -231,7 +231,7 @@ public class TbItemCartController
 	public String showTbItemCart(HttpServletRequest request)
 	{
 		// 获取用户Token
-		String token = CookieUtils.getCookieValue(request, TB_LOGIN_USER_INFO_KEY);
+		String token = CookieUtils.getCookieValue(request, AIYOU_TB_LOGIN_USER_INFO_KEY);
 		// 根据获取用户登录信息
 		AiyouResultData resultData = tbUserService.getUserInfoByToken(token);
 		if (resultData.getStatus() == 200)
@@ -255,7 +255,7 @@ public class TbItemCartController
 			@PathVariable(value = "num") Integer num, HttpServletRequest request, HttpServletResponse response)
 	{
 		// 获取用户Token
-		String token = CookieUtils.getCookieValue(request, TB_LOGIN_USER_INFO_KEY);
+		String token = CookieUtils.getCookieValue(request, AIYOU_TB_LOGIN_USER_INFO_KEY);
 		// 根据获取用户登录信息
 		AiyouResultData resultData = tbUserService.getUserInfoByToken(token);
 		if (resultData.getStatus() == 200)
@@ -278,7 +278,7 @@ public class TbItemCartController
 			HttpServletResponse response)
 	{
 		// 获取用户Token
-		String token = CookieUtils.getCookieValue(request, TB_LOGIN_USER_INFO_KEY);
+		String token = CookieUtils.getCookieValue(request, AIYOU_TB_LOGIN_USER_INFO_KEY);
 		// 根据获取用户登录信息
 		AiyouResultData resultData = tbUserService.getUserInfoByToken(token);
 		if (resultData.getStatus() == 200)
